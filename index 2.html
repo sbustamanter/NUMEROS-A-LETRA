@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Números a Letras</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .app-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .app-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin: 0 0 10px 0;
+        }
+        
+        .app-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+        }
+        
+        .input-section {
+            margin-bottom: 25px;
+        }
+        
+        .input-label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .number-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+        
+        .number-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .convert-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-bottom: 25px;
+        }
+        
+        .convert-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .result-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .result-text {
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            line-height: 1.4;
+        }
+        
+        .placeholder {
+            color: #999;
+            font-style: italic;
+        }
+        
+        .footer-info {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .app-container {
+                padding: 20px;
+                border-radius: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <h1 class="app-title">Números a Letras</h1>
+            <p class="app-subtitle">Convierte números a palabras en español</p>
+        </div>
+        
+        <div class="input-section">
+            <label class="input-label">Ingresa el número:</label>
+            <input type="number" 
+                   class="number-input" 
+                   id="numberInput" 
+                   placeholder="Ej: 1234.56"
+                   step="any"
+                   inputmode="decimal">
+        </div>
+        
+        <button class="convert-btn" onclick="convertNumber()">
+            Convertir a Letras
+        </button>
+        
+        <div class="result-section">
+            <p class="result-text" id="result">
+                <span class="placeholder">El resultado aparecerá aquí</span>
+            </p>
+        </div>
+        
+        <div class="footer-info">
+            Toca para copiar • Funciona sin internet
+        </div>
+    </div>
+
+    <script>
+        // Función principal de conversión
+        function numberToWords(num) {
+            if (isNaN(num) || num < 0) return "Ingresa un número válido";
+            
+            const numero = parseFloat(num.toFixed(2));
+            const parteEntera = Math.floor(numero);
+            const parteDecimal = Math.round((numero - parteEntera) * 100);
+            
+            const unidades = ['', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
+            const especiales = ['diez', 'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve'];
+            const decenas = ['', '', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
+            const centenas = ['', 'ciento', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
+            
+            function convertirGrupo(n) {
+                if (n === 0) return '';
+                if (n === 100) return 'cien';
+                
+                let resultado = '';
+                
+                // Centenas
+                if (n >= 100) {
+                    const c = Math.floor(n / 100);
+                    if (c === 1 && n % 100 === 0) {
+                        resultado += 'cien';
+                    } else {
+                        resultado += centenas[c] + ' ';
+                    }
+                    n %= 100;
+                }
+                
+                // Decenas y unidades
+                if (n >= 20) {
+                    const d = Math.floor(n / 10);
+                    const u = n % 10;
+                    resultado += decenas[d];
+                    if (u > 0) {
+                        resultado += ' y ' + unidades[u];
+                    }
+                } else if (n >= 10) {
+                    resultado += especiales[n - 10];
+                } else if (n > 0) {
+                    resultado += unidades[n];
+                }
+                
+                return resultado.trim();
+            }
+            
+            function convertirNumero(n) {
+                if (n === 0) return 'cero';
+                
+                const grupos = [
+                    { valor: 1000000000, singular: 'mil millones', plural: 'mil millones' },
+                    { valor: 1000000, singular: 'millón', plural: 'millones' },
+                    { valor: 1000, singular: 'mil', plural: 'mil' },
+                    { valor: 1, singular: '', plural: '' }
+                ];
+                
+                let resultado = '';
+                
+                for (let grupo of grupos) {
+                    if (n >= grupo.valor) {
+                        const cantidad = Math.floor(n / grupo.valor);
+                        const resto = n % grupo.valor;
+                        
+                        if (cantidad === 1) {
+                            resultado += convertirGrupo(cantidad) + ' ' + grupo.singular;
+                        } else {
+                            resultado += convertirGrupo(cantidad) + ' ' + grupo.plural;
+                        }
+                        
+                        if (resto > 0) {
+                            resultado += ' ';
+                        }
+                        
+                        n = resto;
+                    }
+                }
+                
+                return resultado.trim();
+            }
+            
+            let resultado = convertirNumero(parteEntera);
+            
+            if (parteDecimal > 0) {
+                resultado += ' con ' + convertirNumero(parteDecimal) + ' centavos';
+            }
+            
+            return resultado;
+        }
+        
+        function convertNumber() {
+            const input = document.getElementById('numberInput');
+            const result = document.getElementById('result');
+            const number = parseFloat(input.value);
+            
+            if (isNaN(number)) {
+                result.innerHTML = '<span style="color: #ef4444;">Ingresa un número válido</span>';
+                return;
+            }
+            
+            const words = numberToWords(number);
+            result.innerHTML = `<strong>${words}</strong>`;
+            
+            // Vibración táctil
+            if ('vibrate' in navigator) {
+                navigator.vibrate(50);
+            }
+            
+            // Copiar al portapapeles al tocar
+            result.onclick = function() {
+                navigator.clipboard.writeText(words).then(() => {
+                    // Feedback visual
+                    result.style.background = '#e0e7ff';
+                    setTimeout(() => {
+                        result.style.background = '#f8f9fa';
+                    }, 500);
+                });
+            };
+        }
+        
+        // Evento para Enter en móvil
+        document.getElementById('numberInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                convertNumber();
+            }
+        });
+        
+        // Registrar Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js');
+            });
+        }
+    </script>
+</body>
+</html>
