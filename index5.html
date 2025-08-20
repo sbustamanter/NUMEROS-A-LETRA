@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Números a Letras - Móvil</title>
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+        
+        :root {
+            --color-primary: #6366f1;
+            --color-secondary: #8b5cf6;
+            --color-text: #2d3748;
+            --color-light: #f8fafc;
+        }
+        
+        * {
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-light);
+            color: var(--color-text);
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            touch-action: manipulation;
+        }
+        
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            border-radius: 16px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .logo-img {
+            height: 48px;
+            width: 48px;
+            object-fit: contain;
+            background: white;
+            border-radius: 12px;
+            padding: 8px;
+        }
+        
+        .app-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-left: 12px;
+        }
+        
+        .app-description {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            margin-bottom: 16px;
+        }
+        
+        .input-group {
+            margin-bottom: 16px;
+        }
+        
+        .input-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .amount-input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: none;
+            font-size: 1rem;
+            background: white;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            -webkit-appearance: none;
+        }
+        
+        .convert-btn {
+            width: 100%;
+            background: white;
+            color: var(--color-primary);
+            font-weight: 600;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+        
+        .convert-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .result-container {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            flex-grow: 1;
+        }
+        
+        .result-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .result-box {
+            min-height: 100px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 12px;
+            font-size: 0.9375rem;
+        }
+        
+        .placeholder-text {
+            color: #718096;
+            text-align: center;
+        }
+        
+        .info-text {
+            font-size: 0.75rem;
+            color: #718096;
+            font-style: italic;
+            margin-top: 8px;
+        }
+        
+        .footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #718096;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .developer-credit {
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+        
+        /* Efectos para móviles */
+        @media (max-width: 480px) {
+            .app-container {
+                padding: 12px;
+            }
+            
+            .header {
+                padding: 16px;
+            }
+            
+            .logo-img {
+                height: 42px;
+                width: 42px;
+            }
+            
+            .app-title {
+                font-size: 1.25rem;
+            }
+            
+            .amount-input, .convert-btn {
+                padding: 12px 14px;
+            }
+            
+            .result-container {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="https://placehold.co/200x200/png?text=NB" alt="Logo de la aplicación con iniciales NB en fondo morado" class="logo-img">
+                <h1 class="app-title">Números a Letras</h1>
+            </div>
+            <p class="app-description">
+                Convierte cantidades numéricas a su equivalente en letras en español
+            </p>
+            
+            <div class="input-group">
+                <label for="amount" class="input-label">Ingresa el número</label>
+                <input 
+                    type="number" 
+                    id="amount" 
+                    placeholder="Ej: 1234.56"
+                    class="amount-input"
+                    min="0"
+                    step="any"
+                    inputmode="decimal"
+                >
+            </div>
+            
+            <button id="convertBtn" class="convert-btn">
+                Convertir a letras
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="result-container">
+            <h2 class="result-title">Resultado:</h2>
+            <div id="result" class="result-box">
+                <p class="placeholder-text">El resultado aparecerá aquí</p>
+            </div>
+            <p class="info-text">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12" y2="8"></line>
+                </svg>
+                Soporta números enteros y decimales hasta billones
+            </p>
+        </div>
+        
+        <div class="footer">
+            <div class="developer-credit">
+                Desarrollada por Sebastián Bustamante Riffo
+            </div>
+            <div>Aplicación optimizada para móviles</div>
+        </div>
+    </div>
+
+    <script>
+        // Función principal de conversión
+        function numberToWords(num) {
+            num = parseFloat(num.toFixed(2));
+            
+            const unidades = ['cero', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
+            const especiales = ['diez', 'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve'];
+            const decenas = ['veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
+            const centenas = ['cien', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
+            const milesSingular = ['mil', 'millón', 'billón'];
+            const milesPlural = ['mil', 'millones', 'billones'];
+            
+            let entero = Math.floor(num);
+            let decimal = Math.round((num - entero) * 100);
+            
+            let words = convertNumber(entero);
+            
+            if (decimal > 0) {
+                words += ' con ' + convertNumber(decimal) + ' centavos';
+            }
+            
+            return words.charAt(0).toUpperCase() + words.slice(1);
+            
+            function convertNumber(num) {
+                if (num === 0) return 'cero';
+                
+                let result = '';
+                let grupos = [];
+                
+                while (num > 0) {
+                    grupos.push(num % 1000);
+                    num = Math.floor(num / 1000);
+                }
+                
+                for (let i = grupos.length - 1; i >= 0; i--) {
+                    const grupo = grupos[i];
+                    
+                    if (grupo === 0) continue;
+                    
+                    let grupoStr = '';
+                    const c = Math.floor(grupo / 100);
+                    const d = Math.floor((grupo % 100) / 10);
+                    const u = grupo % 10;
+                    
+                    // Centenas
+                    if (c > 0) {
+                        if (c === 1 && grupo % 100 === 0) {
+                            grupoStr += centenas[0];
+                        } else {
+                            grupoStr += (c === 1 ? 'ciento' : centenas[c - 1]) + ' ';
+                        }
+                    }
+                    
+                    // Decenas y unidades
+                    if (d > 0 || u > 0) {
+                        if (d === 0) {
+                            grupoStr += unidades[u] + ' ';
+                        } else if (d === 1) {
+                            grupoStr += especiales[u] + ' ';
+                        } else {
+                            let decena = decenas[d - 2];
+                            if (u === 0) {
+                                grupoStr += decena + ' ';
+                            } else if (d === 2 && u > 0) {
+                                grupoStr += (u === 1 ? 'veintiún' : decena.substring(0, decena.length - 1) + 'i' + unidades[u]) + ' ';
+                            } else {
+                                grupoStr += decena + (u === 1 ? ' y un' : ' y ' + unidades[u]) + ' ';
+                            }
+                        }
+                    }
+                    
+                    // Añadir escala
+                    if (i > 0) {
+                        grupoStr += (grupo === 1 ? milesSingular[i - 1] : milesPlural[i - 1]) + ' ';
+                    }
+                    
+                    result += grupoStr;
+                }
+                
+                return result.trim();
+            }
+        }
+
+        // Eventos para móvil
+        document.addEventListener('DOMContentLoaded', function() {
+            const convertBtn = document.getElementById('convertBtn');
+            const amountInput = document.getElementById('amount');
+            const resultDiv = document.getElementById('result');
+            
+            // Evento táctil
+            convertBtn.addEventListener('click', function() {
+                convert();
+            });
+            
+            // Evento teclado móvil
+            amountInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    convert();
+                }
+            });
+            
+            // Función de conversión
+            function convert() {
+                const amount = parseFloat(amountInput.value);
+                
+                if (isNaN(amount)) {
+                    showError("Ingresa un número válido");
+                    return;
+                }
+                
+                if (amount >= 1e12) {
+                    showError("Número demasiado grande (máx: 999,999,999,999.99)");
+                    return;
+                }
+                
+                resultDiv.innerHTML = `<p>${numberToWords(amount)}</p>`;
+                
+                // Feedback visual
+                resultDiv.style.borderColor = "#6366f1";
+                setTimeout(() => resultDiv.style.borderColor = "#e2e8f0", 300);
+            }
+            
+            function showError(message) {
+                resultDiv.innerHTML = `<p style="color: #ef4444;">${message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
